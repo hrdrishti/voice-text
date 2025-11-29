@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Speech to Text Demo</title>
+  <style>
+    body {
+      font-family: Arial;
+      margin: 40px;
+      text-align: center;
+    }
+    #text {
+      width: 80%;
+      height: 120px;
+      font-size: 18px;
+      padding: 10px;
+      margin-top: 20px;
+    }
+    #btn {
+      padding: 12px 25px;
+      font-size: 18px;
+      background: green;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>🎤 Voice to Text (HTML + JS Only)</h2>
+  <button id="btn">Start Listening</button>
+  <textarea id="text" placeholder="Converted text will appear here..."></textarea>
+
+  <script>
+    const btn = document.getElementById("btn");
+    const text = document.getElementById("text");
+
+    // SpeechRecognition object (Chrome uses webkitSpeechRecognition)
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+      alert("Your browser does not support Speech Recognition.");
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = "en-US";     // You can set "hi-IN" for Hindi, "bn-IN" for Bengali etc.
+    recognition.continuous = false; // Stop automatically after speaking
+    recognition.interimResults = false;
+
+    btn.addEventListener("click", () => {
+      recognition.start();
+      btn.innerText = "Listening...";
+      btn.disabled = true;
+    });
+
+    recognition.onresult = (event) => {
+      const speechResult = event.results[0][0].transcript;
+      text.value = speechResult;
+    };
+
+    recognition.onend = () => {
+      btn.innerText = "Start Listening";
+      btn.disabled = false;
+    };
+  </script>
+
+</body>
+</html>
